@@ -1,21 +1,33 @@
-name: Deploy to IIS on Windows
+name: Deploy to EC2
 
 on:
   push:
-    branches: [main]  # Trigger on push to the main branch
+    branches:
+      - main  # Change this to the branch you want to trigger the deployment on
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Use a Linux-based runner
+    runs-on: ubuntu-latest  # GitHub Actions runners are based on Linux, but you can still deploy to a Windows instance
 
     steps:
-      - uses: actions/checkout@v3  # Checkout the repository code
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Deploy to EC2
-        # uses: appleboy/ssh-action@master  # Use an SSH action compatible with Windows
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          password: ${{ secrets.EC2_PASSWORD }}
-          script: |
-            Copy-Item -Path C:\path\to\github\repo\* -Destination C:\inetpub\wwwroot
+    - name: Copy files to EC2
+      uses: appleboy/scp-action@v2
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "path/to/your/files/*"  # Adjust the path to your files
+        target: "C:/inetpub/wwwroot/"  # Adjust the target path on your EC2 instance
+
+    - name: SSH into EC2 and restart IIS
+      uses: appleboy/ssh-action@v2
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username:  ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          Restart-Service -Name W3SVC
+
