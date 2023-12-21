@@ -19,7 +19,7 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "/*"  # Adjust the path to your files
+        source: "."  # Adjust the path to your files
         target: "C:/inetpub/wwwroot/"  # Adjust the target path on your EC2 instance
 
     - name: SSH into EC2 and restart IIS
