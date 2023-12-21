@@ -1,0 +1,21 @@
+name: Deploy to IIS on Windows
+
+on:
+  push:
+    branches: [main]  # Trigger on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use a Linux-based runner
+
+    steps:
+      - uses: actions/checkout@v3  # Checkout the repository code
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master  # Use an SSH action compatible with Windows
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          password: ${{ secrets.EC2_PASSWORD }}
+          script: |
+            Copy-Item -Path C:\path\to\github\repo\* -Destination C:\inetpub\wwwroot
