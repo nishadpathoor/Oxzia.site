@@ -13,6 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
+    - name: multiple command
+      uses: appleboy/ssh-action@v1.0.2
+      with:
+        host: 54.224.9.237
+        username: Administrator
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          whoami
+          ls -al
+      
     - name: Copy files to EC2
       uses: appleboy/ssh-action@v1.0.2
       with:
