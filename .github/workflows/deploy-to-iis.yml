@@ -12,13 +12,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
+      
     - name: Copy files to EC2
-      uses: appleboy/scp-action@v0.1.4
+      uses: appleboy/ssh-action@v1.0.2
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
+        host: 54.224.9.237
+        username: Administrator
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
         source: "."  # Adjust the path to your files
         target: "C:/inetpub/wwwroot/"  # Adjust the target path on your EC2 instance
 
